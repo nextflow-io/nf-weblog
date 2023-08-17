@@ -190,7 +190,7 @@ class WebLogObserver implements TraceObserver{
      * @param payload An additional object to send. Must be of type TraceRecord or Manifest
      */
     protected void sendHttpMessage(String event, Object payload = null){
-
+        log.trace "Sending weblog event=$event; payload=$payload"
         // Set the message info
         final time = new Date().format(Const.ISO_8601_DATETIME_FORMAT, UTC)
 
