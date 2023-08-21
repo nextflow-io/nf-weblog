@@ -79,16 +79,21 @@ class WebLogObserver implements TraceObserver{
 
     private String endpoint
 
+    private String basicToken
+
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
      * @param url The target address for sending messages to
      */
-    WebLogObserver(String url) {
+
+    WebLogObserver(String url, String basicToken) {
         this.endpoint = checkUrl(url)
+        this.basicToken = checkBasicToken(basicToken)
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
+
 
     /**
      * only for testing purpose -- do not use
@@ -111,6 +116,23 @@ class WebLogObserver implements TraceObserver{
             return url
         }
         throw new IllegalArgumentException("Only http and https are supported -- The given URL was: ${url}")
+    }
+
+    /**
+     * Check the provided basicToken is a valid value. If a invalid i.e. not a base64 encoded value,
+     * the constructor will raise an exception.
+     *
+     * The RegEx was taken and adapted from http://urlregex.com
+     *
+     * @param url String with target URL
+     * @return The requested url or the default url, if invalid
+     */
+    protected String checkBasicToken(String basicToken) {
+        def pattern = /^[A-Za-z0-9+=]+$/
+        if (basicToken == null || basicToken ==~ pattern) {
+            return basicToken
+        }
+        throw new IllegalArgumentException("Invalid auth token provided.")
     }
 
     /**
@@ -201,11 +223,14 @@ class WebLogObserver implements TraceObserver{
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-                message.trace = (payload as TraceRecord).store
+            message.trace = (payload as TraceRecord).store
         else if (payload instanceof FlowPayload)
-                message.metadata = payload
+            message.metadata = payload
         else if (payload != null)
             throw new IllegalArgumentException("Only TraceRecord and Manifest class types are supported: [${payload.getClass().getName()}] $payload")
+
+        if (basicToken != null)
+            httpClient.setBasicToken(basicToken)
 
         // The actual HTTP request
         httpClient.sendHttpMessage(endpoint, generator.toJson(message))
