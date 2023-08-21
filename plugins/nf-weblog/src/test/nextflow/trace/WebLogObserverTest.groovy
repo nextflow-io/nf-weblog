@@ -32,7 +32,7 @@ class WebLogObserverTest extends Specification {
     def 'do not send messages on wrong formatted url'() {
 
         when:
-        new WebLogObserver("localhost")
+        new WebLogObserver("localhost", null)
 
         then:
         thrown(IllegalArgumentException)
@@ -41,7 +41,7 @@ class WebLogObserverTest extends Specification {
     def 'send message on different workflow events' () {
 
         given:
-        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost"])
+        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost", null])
         WorkflowMetadata workflowMeta = Mock(WorkflowMetadata)
 
         def bindingStub = Mock(ScriptBinding){
@@ -103,7 +103,7 @@ class WebLogObserverTest extends Specification {
     def 'should validate URL' () {
         given:
         def observer = new WebLogObserver()
-        
+
         expect:
         observer.checkUrl('http://localhost') == 'http://localhost'
         observer.checkUrl('http://google.com') == 'http://google.com'

@@ -79,16 +79,21 @@ class WebLogObserver implements TraceObserver{
 
     private String endpoint
 
+    private String basicToken
+
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
      * @param url The target address for sending messages to
      */
-    WebLogObserver(String url) {
+
+    WebLogObserver(String url, String basicToken) {
         this.endpoint = checkUrl(url)
+        this.basicToken = checkBasicToken(basicToken)
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
+
 
     /**
      * only for testing purpose -- do not use
@@ -111,6 +116,11 @@ class WebLogObserver implements TraceObserver{
             return url
         }
         throw new IllegalArgumentException("Only http and https are supported -- The given URL was: ${url}")
+    }
+
+    protected String checkBasicToken(String basicToken){
+        // TODO: To implement, and remember that `basicToken` can be null
+        return basicToken
     }
 
     /**
@@ -201,11 +211,14 @@ class WebLogObserver implements TraceObserver{
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-                message.trace = (payload as TraceRecord).store
+            message.trace = (payload as TraceRecord).store
         else if (payload instanceof FlowPayload)
-                message.metadata = payload
+            message.metadata = payload
         else if (payload != null)
             throw new IllegalArgumentException("Only TraceRecord and Manifest class types are supported: [${payload.getClass().getName()}] $payload")
+
+        if (basicToken != null)
+            httpClient.setBasicToken(basicToken)
 
         // The actual HTTP request
         httpClient.sendHttpMessage(endpoint, generator.toJson(message))
