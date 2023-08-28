@@ -59,6 +59,10 @@ If `true` it will send HTTP POST requests to a given url.
 
 The url where to send HTTP POST requests (default: `http://localhost`).
 
+`weblog.basicToken`
+
+A Basic authentication token to append to each HTTP request.
+
 ## Examples
 
 ### Example `started` event

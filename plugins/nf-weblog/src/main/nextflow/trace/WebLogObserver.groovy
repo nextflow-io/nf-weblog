@@ -79,13 +79,17 @@ class WebLogObserver implements TraceObserver{
 
     private String endpoint
 
+    private String basicToken
+
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
-     * @param url The target address for sending messages to
+     * @param url
+     * @param basicToken
      */
-    WebLogObserver(String url) {
+    WebLogObserver(String url, String basicToken) {
         this.endpoint = checkUrl(url)
+        this.basicToken = checkBasicToken(basicToken)
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
@@ -111,6 +115,19 @@ class WebLogObserver implements TraceObserver{
             return url
         }
         throw new IllegalArgumentException("Only http and https are supported -- The given URL was: ${url}")
+    }
+
+    /**
+     * Check the provided basic token, and raise an exception if it is not.
+     *
+     * @param basicToken
+     */
+    protected String checkBasicToken(String basicToken) {
+        def pattern = /^[A-Za-z0-9+=]+$/
+        if (basicToken == null || basicToken ==~ pattern) {
+            return basicToken
+        }
+        throw new IllegalArgumentException("Invalid auth token provided.")
     }
 
     /**
@@ -201,11 +218,14 @@ class WebLogObserver implements TraceObserver{
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-                message.trace = (payload as TraceRecord).store
+            message.trace = (payload as TraceRecord).store
         else if (payload instanceof FlowPayload)
-                message.metadata = payload
+            message.metadata = payload
         else if (payload != null)
             throw new IllegalArgumentException("Only TraceRecord and Manifest class types are supported: [${payload.getClass().getName()}] $payload")
+
+        if (basicToken != null)
+            httpClient.setBasicToken(basicToken)
 
         // The actual HTTP request
         httpClient.sendHttpMessage(endpoint, generator.toJson(message))

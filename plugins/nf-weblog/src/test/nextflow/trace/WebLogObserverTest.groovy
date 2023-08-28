@@ -31,17 +31,38 @@ class WebLogObserverTest extends Specification {
 
     def 'do not send messages on wrong formatted url'() {
 
+        String url = "localhost"
         when:
-        new WebLogObserver("localhost")
+        new WebLogObserver(url, null)
 
         then:
-        thrown(IllegalArgumentException)
+        def e = thrown(IllegalArgumentException)
+        e.message == "Only http and https are supported -- The given URL was: ${url}"
+    }
+
+    def 'do not send messages on wrong formatted basic token'() {
+
+        when:
+        new WebLogObserver("http://localhost", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message == "Invalid auth token provided."
+    }
+
+    def 'send messages when basic token is null'() {
+
+        when:
+        new WebLogObserver("http://localhost", null)
+
+        then:
+        notThrown(IllegalArgumentException)
     }
 
     def 'send message on different workflow events' () {
 
         given:
-        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost"])
+        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost", null])
         WorkflowMetadata workflowMeta = Mock(WorkflowMetadata)
 
         def bindingStub = Mock(ScriptBinding){
@@ -103,7 +124,7 @@ class WebLogObserverTest extends Specification {
     def 'should validate URL' () {
         given:
         def observer = new WebLogObserver()
-        
+
         expect:
         observer.checkUrl('http://localhost') == 'http://localhost'
         observer.checkUrl('http://google.com') == 'http://google.com'
