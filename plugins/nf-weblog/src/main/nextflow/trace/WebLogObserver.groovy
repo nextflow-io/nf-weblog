@@ -84,16 +84,15 @@ class WebLogObserver implements TraceObserver{
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
-     * @param url The target address for sending messages to
+     * @param url
+     * @param basicToken
      */
-
     WebLogObserver(String url, String basicToken) {
         this.endpoint = checkUrl(url)
         this.basicToken = checkBasicToken(basicToken)
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
-
 
     /**
      * only for testing purpose -- do not use
@@ -119,13 +118,9 @@ class WebLogObserver implements TraceObserver{
     }
 
     /**
-     * Check the provided basicToken is a valid value. If a invalid i.e. not a base64 encoded value,
-     * the constructor will raise an exception.
+     * Check the provided basic token, and raise an exception if it is not.
      *
-     * The RegEx was taken and adapted from http://urlregex.com
-     *
-     * @param url String with target URL
-     * @return The requested url or the default url, if invalid
+     * @param basicToken
      */
     protected String checkBasicToken(String basicToken) {
         def pattern = /^[A-Za-z0-9+=]+$/

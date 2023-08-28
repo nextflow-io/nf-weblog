@@ -36,21 +36,21 @@ class WebLogObserverTest extends Specification {
         new WebLogObserver(url, null)
 
         then:
-        IllegalArgumentException e = thrown(IllegalArgumentException)
+        def e = thrown(IllegalArgumentException)
         e.message == "Only http and https are supported -- The given URL was: ${url}"
     }
 
-    def 'do not send messages on wrong formatted url'() {
+    def 'do not send messages on wrong formatted basic token'() {
 
         when:
         new WebLogObserver("http://localhost", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
 
         then:
-        IllegalArgumentException e = thrown(IllegalArgumentException)
+        def e = thrown(IllegalArgumentException)
         e.message == "Invalid auth token provided."
     }
 
-    def 'send messages when basicToken is null'() {
+    def 'send messages when basic token is null'() {
 
         when:
         new WebLogObserver("http://localhost", null)
