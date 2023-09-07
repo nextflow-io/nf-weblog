@@ -248,6 +248,14 @@ To build and test the plugin during development, configure a local Nextflow buil
     ./launch.sh run nextflow-io/hello -plugins nf-weblog
     ```
 
+### Test endpoint
+
+The `echo.py` script can be used to deploy a local server that logs POST requests, which is useful for testing the plugin:
+
+```bash
+./echo.py
+```
+
 ## Testing without Nextflow build
 
 The plugin can be tested without using a local Nextflow build using the following steps:
