@@ -41,7 +41,7 @@ import java.nio.file.Path
  */
 @Slf4j
 @CompileStatic
-class WebLogObserver implements TraceObserver{
+class WebLogObserver implements TraceObserver {
 
     private Session session
 
@@ -110,7 +110,7 @@ class WebLogObserver implements TraceObserver{
      * @param url String with target URL
      * @return The requested url or the default url, if invalid
      */
-    protected String checkUrl(String url){
+    protected String checkUrl(String url) {
         if( url =~ "^(https|http)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]" ) {
             return url
         }
@@ -206,7 +206,7 @@ class WebLogObserver implements TraceObserver{
      * 'process_complete', 'error', 'completed'}
      * @param payload An additional object to send. Must be of type TraceRecord or Manifest
      */
-    protected void sendHttpMessage(String event, Object payload = null){
+    protected void sendHttpMessage(String event, Object payload = null) {
         log.trace "Sending weblog event=$event; payload=$payload"
         // Set the message info
         final time = new Date().format(Const.ISO_8601_DATETIME_FORMAT, UTC)
@@ -218,7 +218,7 @@ class WebLogObserver implements TraceObserver{
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-            message.trace = (payload as TraceRecord).store
+            message.trace = payload.store
         else if (payload instanceof FlowPayload)
             message.metadata = payload
         else if (payload != null)
@@ -243,14 +243,21 @@ class WebLogObserver implements TraceObserver{
      * @param event The workflow run status
      * @param payload An additional object to send. Must be of type TraceRecord or Manifest
      */
-    protected void asyncHttpMessage(String event, Object payload = null){
-        webLogAgent.send{sendHttpMessage(event, payload)}
+    protected void asyncHttpMessage(String event, Object payload = null) {
+        webLogAgent.send {
+            try {
+                sendHttpMessage(event, payload)
+            }
+            catch( Exception e ) {
+                log.warn1 e.message
+            }
+        }
     }
 
     /**
      * Little helper function that can be called for logging upon an incoming HTTP response
      */
-    protected void logHttpResponse(){
+    protected void logHttpResponse() {
         def statusCode = httpClient.getResponseCode()
         if (statusCode >= 200 && statusCode < 300) {
             log.debug "Successfully sent message to ${endpoint} -- received status code ${statusCode}."
