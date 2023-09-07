@@ -138,7 +138,7 @@ When a workflow execution is started, a message like the following is posted to 
         "version": "19.03.0-edge",
         "build": 5137,
         "timestamp": "2019-03-28T14:46:55Z"
-      },
+      }
     },
     "stats": {
       "computeTimeFmt": "(a few seconds)",
