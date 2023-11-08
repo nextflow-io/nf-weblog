@@ -47,7 +47,7 @@ class WebLogObserverTest extends Specification {
 
         then:
         def e = thrown(IllegalArgumentException)
-        e.message == "Invalid auth token provided."
+        e.message == "Invalid auth token provided - should be 'USERNAME:PASSWORD'."
     }
 
     def 'send messages when basic token is null'() {

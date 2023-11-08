@@ -123,11 +123,10 @@ class WebLogObserver implements TraceObserver {
      * @param basicToken
      */
     protected String checkBasicToken(String basicToken) {
-        def pattern = /^[A-Za-z0-9+=]+$/
-        if (basicToken == null || basicToken ==~ pattern) {
+        if (basicToken == null || basicToken.contains(':')) {
             return basicToken
         }
-        throw new IllegalArgumentException("Invalid auth token provided.")
+        throw new IllegalArgumentException("Invalid auth token provided - should be 'USERNAME:PASSWORD'.")
     }
 
     /**
