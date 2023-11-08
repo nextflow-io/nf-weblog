@@ -61,7 +61,7 @@ The url where to send HTTP POST requests (default: `http://localhost`).
 
 `weblog.basicToken`
 
-A Basic authentication token to append to each HTTP request. It should be the Base64 encoding of the user ID and password joined by a single colon, for example with the Bash command `base64 <(echo USER:PASSWORD)`.
+A Basic authentication token to append to each HTTP request. It should be the user ID and password joined by a single colon, for example `USER:PASSWORD`.
 
 ## Examples
 
