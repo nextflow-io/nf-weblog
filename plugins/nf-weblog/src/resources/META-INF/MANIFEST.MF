@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Plugin-Id: nf-weblog
-Plugin-Version: 1.1.1
+Plugin-Version: 1.1.2
 Plugin-Class: nextflow.trace.WebLogPlugin
 Plugin-Provider: nextflow
 Plugin-Requires: >=23.10.0
