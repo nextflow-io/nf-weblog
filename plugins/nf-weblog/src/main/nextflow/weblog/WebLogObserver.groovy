@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package nextflow.trace
+package nextflow.weblog
+
+import java.nio.file.Path
 
 import groovy.json.JsonGenerator
 import groovy.transform.CompileStatic
@@ -27,10 +29,11 @@ import nextflow.Session
 import nextflow.processor.TaskHandler
 import nextflow.script.ScriptBinding.ParamsMap
 import nextflow.script.WorkflowMetadata
+import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverFactory
+import nextflow.trace.TraceRecord
 import nextflow.util.Duration
 import nextflow.util.SimpleHttpClient
-
-import java.nio.file.Path
 
 /**
  * Send out messages via HTTP to a configured URL on different workflow
@@ -217,7 +220,7 @@ class WebLogObserver implements TraceObserver {
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-            message.trace = payload.store
+            message.trace = payload.getStore()
         else if (payload instanceof FlowPayload)
             message.metadata = payload
         else if (payload != null)
