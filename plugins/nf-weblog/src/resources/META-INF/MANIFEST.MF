@@ -3,4 +3,4 @@ Plugin-Id: nf-weblog
 Plugin-Version: 1.1.1
 Plugin-Class: nextflow.trace.WebLogPlugin
 Plugin-Provider: nextflow
-Plugin-Requires: >=23.07.0-edge
+Plugin-Requires: >=23.10.0

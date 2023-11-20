@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-package nextflow.trace
-
-import spock.lang.Specification
+package nextflow.weblog
 
 import groovy.json.JsonGenerator
 import groovy.json.JsonSlurper
@@ -25,7 +23,9 @@ import nextflow.Session
 import nextflow.processor.TaskHandler
 import nextflow.script.ScriptBinding
 import nextflow.script.WorkflowMetadata
+import nextflow.trace.TraceRecord
 import nextflow.util.SimpleHttpClient
+import spock.lang.Specification
 
 class WebLogObserverTest extends Specification {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nextflow.trace
+package nextflow.weblog
 
 import groovy.transform.CompileStatic
 import nextflow.plugin.BasePlugin
