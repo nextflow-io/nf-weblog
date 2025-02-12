@@ -18,10 +18,11 @@ class WebLogFactory implements TraceObserverFactory {
         def isEnabled = session.config.navigate('weblog.enabled') as Boolean
         def url = session.config.navigate('weblog.url') as String
         def basicToken = session.config.navigate('weblog.basicToken') as String
+        def omitScript = session.config.navigate('weblog.omitScript') as Boolean
         def result = new ArrayList()
         if ( isEnabled ) {
             if ( !url ) url = WebLogObserver.DEF_URL
-            def observer = new WebLogObserver(url, basicToken)
+            def observer = new WebLogObserver(url, basicToken, omitScript)
             result << observer
         }
         return result

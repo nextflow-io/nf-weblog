@@ -33,7 +33,7 @@ class WebLogObserverTest extends Specification {
 
         String url = "localhost"
         when:
-        new WebLogObserver(url, null)
+        new WebLogObserver(url, null, false)
 
         then:
         def e = thrown(IllegalArgumentException)
@@ -43,7 +43,7 @@ class WebLogObserverTest extends Specification {
     def 'do not send messages on wrong formatted basic token'() {
 
         when:
-        new WebLogObserver("http://localhost", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
+        new WebLogObserver("http://localhost", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", false)
 
         then:
         def e = thrown(IllegalArgumentException)
@@ -53,7 +53,7 @@ class WebLogObserverTest extends Specification {
     def 'send messages when basic token is null'() {
 
         when:
-        new WebLogObserver("http://localhost", null)
+        new WebLogObserver("http://localhost", null, false)
 
         then:
         notThrown(IllegalArgumentException)
@@ -62,7 +62,7 @@ class WebLogObserverTest extends Specification {
     def 'send message on different workflow events' () {
 
         given:
-        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost", null])
+        WebLogObserver httpPostObserver0 = Spy(WebLogObserver, constructorArgs: ["http://localhost", null, false])
         WorkflowMetadata workflowMeta = Mock(WorkflowMetadata)
 
         def bindingStub = Mock(ScriptBinding){
