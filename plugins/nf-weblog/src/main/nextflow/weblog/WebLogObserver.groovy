@@ -84,15 +84,18 @@ class WebLogObserver implements TraceObserver {
 
     private String basicToken
 
+    private Boolean omitScript
+
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
      * @param url
      * @param basicToken
      */
-    WebLogObserver(String url, String basicToken) {
+    WebLogObserver(String url, String basicToken, Boolean omitScript) {
         this.endpoint = checkUrl(url)
         this.basicToken = checkBasicToken(basicToken)
+        this.omitScript = omitScript
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
@@ -220,7 +223,11 @@ class WebLogObserver implements TraceObserver {
         message.utcTime = time
 
         if (payload instanceof TraceRecord)
-            message.trace = payload.getStore()
+            Map<String,Object> store = new HashMap(payload.getStore())
+            if (omitScript) {
+                store.remove("script")
+            }
+            message.trace = store
         else if (payload instanceof FlowPayload)
             message.metadata = payload
         else if (payload != null)
