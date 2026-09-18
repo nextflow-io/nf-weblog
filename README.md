@@ -1,15 +1,16 @@
 # nf-weblog plugin 
-   
-This plugin allows Nextflow to send detailed workflow execution metadata and runtime statistics to a HTTP endpoint. 
-To enable this feature, use the `-with-weblog` as shown below:
 
-```bash
-nextflow run <pipeline name> -with-weblog [url]
-```
+Nextflow plugin to send workflow execution metadata and runtime statistics to a HTTP endpoint.
 
-Or enable it in the Nextflow configuration:
+## Usage
+
+Enable the plugin in your Nextflow configuration:
 
 ```groovy
+plugins {
+  id 'nf-weblog'
+}
+
 weblog {
   enabled = true
   url = '...'
