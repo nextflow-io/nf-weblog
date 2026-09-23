@@ -2,13 +2,6 @@
 
 Nextflow plugin to send workflow execution metadata and runtime statistics to a HTTP endpoint.
 
-## Requirements
-
-| Version | Minimum Nextflow version |
-| ------- | ------------------------ |
-| 1.1.2   | 23.10 |
-| 1.0.0 - 1.1.1 | 23.07.0-edge |
-
 ## Usage
 
 Enable the plugin in your Nextflow configuration:
@@ -229,7 +222,3 @@ When a task is completed, a message like the following is posted to the specifie
 }
 ```
 
-
-## Development
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
