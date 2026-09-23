@@ -12,7 +12,7 @@ See [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to
 - Use `TraceObserverV2` (#15)
 - Use plugin registry (#15)
 
-Starting with Nextflow 26.09, `weblog.enabled = true` no longer loads the plugin automatically. Add `id 'nf-weblog'` to the `plugins` block.
+Starting in Nextflow 26.10, `weblog.enabled = true` no longer loads the plugin automatically. Add `id 'nf-weblog'` to the `plugins` block.
 
 ## [1.1.2] - 2023-11-19
 
