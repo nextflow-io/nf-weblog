@@ -2,12 +2,10 @@ name: nf-weblog CI
 on:
   push:
     branches:
-      - '*'
-    tags-ignore:
-      - '*'
+      - 'master'
   pull_request:
-    branches:
-      - '*'
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
 jobs:
   build:
     name: Build nf-weblog
@@ -18,6 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         java_version: [17, 21]
+        nextflow_version: ['25.10']
 
     steps:
       - name: Environment
@@ -36,11 +35,23 @@ jobs:
           architecture: x64
           distribution: 'temurin'
 
-      - name: Compile
-        run: ./gradlew assemble
-
-      - name: Tests
-        run: ./gradlew check
+      - name: Unit tests
+        run: make test
         env:
           GRADLE_OPTS: '-Dorg.gradle.daemon=false'
 
+      - name: Setup Nextflow ${{ matrix.nextflow_version }}
+        uses: nf-core/setup-nextflow@b9f764e8ba5c76b712ace14ecbfcef0e40ae2dd8 # v1
+        with:
+          version: "${{ matrix.nextflow_version }}"
+
+      - name: Install
+        run: make install
+
+      - name: Test
+        run: |
+          python3 -u echo.py > echo.log 2>&1 &
+          nextflow run nf-weblog-test/ -plugins nf-weblog@$(cat VERSION)
+          for event in started process_submitted process_started process_completed completed; do
+            grep -q "\"event\":\"$event\"" echo.log || { echo "missing event: $event"; cat echo.log; exit 1; }
+          done

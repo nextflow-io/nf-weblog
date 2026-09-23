@@ -17,17 +17,25 @@
 package nextflow.weblog
 
 import groovy.transform.CompileStatic
-import nextflow.plugin.BasePlugin
-import org.pf4j.PluginWrapper
+import nextflow.Session
+import nextflow.trace.TraceObserverFactoryV2
+import nextflow.trace.TraceObserverV2
+
 /**
- * Implements the Hello plugins entry point
+ * Factory logic for WebLog observer
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
 @CompileStatic
-class WebLogPlugin extends BasePlugin {
+class WebLogFactory implements TraceObserverFactoryV2 {
 
-    WebLogPlugin(PluginWrapper wrapper) {
-        super(wrapper)
+    @Override
+    Collection<TraceObserverV2> create(Session session) {
+        final opts = session.config.weblog as Map ?: Collections.emptyMap()
+        final config = new WebLogConfig(opts)
+        return config.enabled
+            ? [ new WebLogObserver(config.url, config.basicToken) as TraceObserverV2 ]
+            : []
     }
+
 }
