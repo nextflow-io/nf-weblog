@@ -24,6 +24,7 @@ import nextflow.processor.TaskHandler
 import nextflow.script.ScriptBinding
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
+import nextflow.trace.event.TaskEvent
 import nextflow.util.SimpleHttpClient
 import spock.lang.Specification
 
@@ -74,16 +75,15 @@ class WebLogObserverTest extends Specification {
             getBinding() >> bindingStub
             getWorkflowMetadata() >> workflowMeta
         }
-        def traceStub = Mock(TraceRecord)
-        def handlerStub = Mock(TaskHandler)
+        def event = new TaskEvent(Mock(TaskHandler), Mock(TraceRecord))
 
         when:
         def payload = WebLogObserver.createFlowPayloadFromSession(sessionStub)
         httpPostObserver0.onFlowCreate(sessionStub)
-        httpPostObserver0.onProcessSubmit(handlerStub, traceStub)
-        httpPostObserver0.onProcessStart(handlerStub, traceStub)
-        httpPostObserver0.onProcessComplete(handlerStub, traceStub)
-        httpPostObserver0.onFlowError(handlerStub, traceStub)
+        httpPostObserver0.onTaskSubmit(event)
+        httpPostObserver0.onTaskStart(event)
+        httpPostObserver0.onTaskComplete(event)
+        httpPostObserver0.onFlowError(event)
         httpPostObserver0.onFlowComplete()
 
         then:

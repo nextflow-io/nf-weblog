@@ -14,4 +14,20 @@
  * limitations under the License.
  */
 
-rootProject.name = 'nf-weblog'
+package nextflow.weblog
+
+import groovy.transform.CompileStatic
+import nextflow.plugin.BasePlugin
+import org.pf4j.PluginWrapper
+/**
+ * Implements the WebLog plugin entry point
+ *
+ * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ */
+@CompileStatic
+class WebLogPlugin extends BasePlugin {
+
+    WebLogPlugin(PluginWrapper wrapper) {
+        super(wrapper)
+    }
+}

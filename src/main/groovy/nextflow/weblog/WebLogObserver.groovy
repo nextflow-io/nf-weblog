@@ -26,12 +26,11 @@ import groovyx.gpars.agent.Agent
 import nextflow.Const
 import nextflow.NextflowMeta
 import nextflow.Session
-import nextflow.processor.TaskHandler
 import nextflow.script.ScriptBinding.ParamsMap
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceObserver
-import nextflow.trace.TraceObserverFactory
+import nextflow.trace.TraceObserverV2
 import nextflow.trace.TraceRecord
+import nextflow.trace.event.TaskEvent
 import nextflow.util.Duration
 import nextflow.util.SimpleHttpClient
 
@@ -44,7 +43,7 @@ import nextflow.util.SimpleHttpClient
  */
 @Slf4j
 @CompileStatic
-class WebLogObserver implements TraceObserver {
+class WebLogObserver implements TraceObserverV2 {
 
     private Session session
 
@@ -157,47 +156,37 @@ class WebLogObserver implements TraceObserver {
     }
 
     /**
-     * Send an HTTP message when a process has been submitted
-     *
-     * @param handler A {@link TaskHandler} object representing the task submitted
-     * @param trace A {@link TraceRecord} object holding the task metadata and runtime info
+     * Send an HTTP message when a task has been submitted
      */
     @Override
-    void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
-        asyncHttpMessage("process_submitted", trace)
+    void onTaskSubmit(TaskEvent event) {
+        asyncHttpMessage("process_submitted", event.trace)
     }
 
     /**
-     * Send an HTTP message, when a process has started
-     *
-     * @param handler A {@link TaskHandler} object representing the task started
-     * @param trace A {@link TraceRecord} object holding the task metadata and runtime info
+     * Send an HTTP message when a task has started
      */
     @Override
-    void onProcessStart(TaskHandler handler, TraceRecord trace) {
-        asyncHttpMessage("process_started", trace)
+    void onTaskStart(TaskEvent event) {
+        asyncHttpMessage("process_started", event.trace)
     }
 
     /**
-     * Send an HTTP message, when a process completed
-     *
-     * @param handler A {@link TaskHandler} object representing the task completed
-     * @param trace A {@link TraceRecord} object holding the task metadata and runtime info
+     * Send an HTTP message when a task has completed
      */
     @Override
-    void onProcessComplete(TaskHandler handler, TraceRecord trace) {
-        asyncHttpMessage("process_completed", trace)
+    void onTaskComplete(TaskEvent event) {
+        asyncHttpMessage("process_completed", event.trace)
     }
 
     /**
-     * Send an HTTP message, when a workflow has failed
+     * Send an HTTP message when the workflow has failed
      *
-     * @param handler A {@link TaskHandler} object representing the task that caused the workflow execution to fail (it may be null)
-     * @param trace A {@link TraceRecord} object holding the task metadata and runtime info (it may be null)
+     * @param event The task that caused the failure (may be null)
      */
     @Override
-    void onFlowError(TaskHandler handler, TraceRecord trace) {
-        asyncHttpMessage("error", trace)
+    void onFlowError(TaskEvent event) {
+        asyncHttpMessage("error", event?.trace)
     }
 
     /**

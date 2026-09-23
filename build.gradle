@@ -1,0 +1,17 @@
+
+plugins {
+    id 'io.nextflow.nextflow-plugin' version '1.0.0-beta.12'
+}
+
+version = project.file('VERSION').text.trim()
+
+nextflowPlugin {
+    nextflowVersion = '25.10.0'
+
+    provider = 'nextflow'
+    className = 'nextflow.weblog.WebLogPlugin'
+    extensionPoints = [
+        'nextflow.weblog.WebLogConfig',
+        'nextflow.weblog.WebLogFactory'
+    ]
+}
