@@ -2,6 +2,9 @@
 
 Nextflow plugin to send workflow execution metadata and runtime statistics to a HTTP endpoint.
 
+> [!IMPORTANT]
+> This is a community-maintained project and is not covered by Seqera support. Please submit any problems or feature requests as [GitHub issues](https://github.com/nextflow-io/nf-weblog/issues).
+
 ## Usage
 
 Enable the plugin in your Nextflow configuration:
