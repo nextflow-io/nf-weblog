@@ -180,6 +180,18 @@ class WebLogObserver implements TraceObserverV2 {
     }
 
     /**
+     * Send an HTTP message when a task has been cached
+     */
+    @Override
+    void onTaskCached(TaskEvent event) {
+        // event was triggered by a stored task, ignore it
+        if (!event.trace) {
+            return
+        }
+        asyncHttpMessage("process_cached", event.trace)
+    }
+
+    /**
      * Send an HTTP message when the workflow has failed
      *
      * @param event The task that caused the failure (may be null)

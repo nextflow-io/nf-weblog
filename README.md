@@ -26,7 +26,7 @@ Workflow events are sent as HTTP POST requests to the given URL. The message con
 {
   "runName": "<run name>",
   "runId": "<uuid>",
-  "event": "<started|process_submitted|process_started|process_completed|error|completed>",
+  "event": "<started|process_submitted|process_started|process_completed|process_cached|error|completed>",
   "utcTime": "<UTC timestamp>",
   "trace": {  },
   "metadata": {  }
@@ -39,13 +39,13 @@ The JSON object contains the following attributes:
 
 - `runId`: The workflow execution unique ID.
 
-- `event`: The workflow execution event. One of `started`, `process_submitted`, `process_started`, `process_completed`, `error`, `completed`.
+- `event`: The workflow execution event. One of `started`, `process_submitted`, `process_started`, `process_completed`, `process_cached`, `error`, `completed`.
 
 - `utcTime`: The UTC timestamp in ISO 8601 format.
 
 - `trace`: The task runtime information as described in the [Trace report](https://nextflow.io/docs/latest/tracing.html#trace-report) documentation. The set of included fields is determined by the `trace.fields` setting in the Nextflow configuration file. See the [Trace configuration](https://nextflow.io/docs/latest/config.html#scope-trace) docs to learn more.
 
-  *Included only for the following events: `process_submitted`, `process_started`, `process_completed`, `error`*
+  *Included only for the following events: `process_submitted`, `process_started`, `process_completed`, `process_cached`, `error`*
 
 - `metadata`: The workflow metadata including the [config manifest](https://nextflow.io/docs/latest/config.html#scope-manifest). For a list of all fields, have a look at the bottom message examples.
 
