@@ -34,7 +34,7 @@ class WebLogFactory implements TraceObserverFactoryV2 {
         final opts = session.config.weblog as Map ?: Collections.emptyMap()
         final config = new WebLogConfig(opts)
         return config.enabled
-            ? [ new WebLogObserver(config.url, config.basicToken) as TraceObserverV2 ]
+            ? [ new WebLogObserver(config.url, config.basicToken, config.includeCached) as TraceObserverV2 ]
             : []
     }
 

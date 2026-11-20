@@ -38,6 +38,7 @@ class WebLogFactoryTest extends Specification {
         [weblog: [enabled: false]]                              | 0
         [weblog: [enabled: true]]                               | 1
         [weblog: [enabled: true, url: 'https://foo.com:8080']]  | 1
+        [weblog: [enabled: true, includeCached: true]]          | 1
     }
 
     def 'should apply config defaults' () {
@@ -45,6 +46,8 @@ class WebLogFactoryTest extends Specification {
         new WebLogConfig([:]).url == WebLogObserver.DEF_URL
         new WebLogConfig([url: 'http://foo.com']).url == 'http://foo.com'
         !new WebLogConfig([:]).enabled
+        !new WebLogConfig([:]).includeCached
+        new WebLogConfig([includeCached: true]).includeCached
     }
 
 }

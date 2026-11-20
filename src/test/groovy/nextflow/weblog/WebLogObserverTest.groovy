@@ -89,14 +89,29 @@ class WebLogObserverTest extends Specification {
 
         then:
         assert payload.workflow instanceof WorkflowMetadata
-        7 * httpPostObserver0.asyncHttpMessage(!null, !null) >> null
+        6 * httpPostObserver0.asyncHttpMessage(!null, !null) >> null
 
     }
 
-    def 'should send message when task is cached' () {
+    def 'should not send message when task is cached by default' () {
 
         given:
         WebLogObserver observer = Spy(WebLogObserver, constructorArgs: ["http://localhost", null])
+        def trace = Mock(TraceRecord)
+        def event = new TaskEvent(Mock(TaskHandler), trace)
+
+        when:
+        observer.onTaskCached(event)
+
+        then:
+        0 * observer.asyncHttpMessage(_, _)
+
+    }
+
+    def 'should send message when task is cached and includeCached is true' () {
+
+        given:
+        WebLogObserver observer = Spy(WebLogObserver, constructorArgs: ["http://localhost", null, true])
         def trace = Mock(TraceRecord)
         def event = new TaskEvent(Mock(TaskHandler), trace)
 
@@ -111,7 +126,7 @@ class WebLogObserverTest extends Specification {
     def 'should ignore cached task when trace is null' () {
 
         given:
-        WebLogObserver observer = Spy(WebLogObserver, constructorArgs: ["http://localhost", null])
+        WebLogObserver observer = Spy(WebLogObserver, constructorArgs: ["http://localhost", null, true])
         def event = new TaskEvent(Mock(TaskHandler), null)
 
         when:

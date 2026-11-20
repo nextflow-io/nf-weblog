@@ -39,7 +39,7 @@ The JSON object contains the following attributes:
 
 - `runId`: The workflow execution unique ID.
 
-- `event`: The workflow execution event. One of `started`, `process_submitted`, `process_started`, `process_completed`, `process_cached`, `error`, `completed`.
+- `event`: The workflow execution event. One of `started`, `process_submitted`, `process_started`, `process_completed`, `process_cached`, `error`, `completed`. (`process_cached` is sent only when `weblog.includeCached = true`.)
 
 - `utcTime`: The UTC timestamp in ISO 8601 format.
 
@@ -66,6 +66,10 @@ The url where to send HTTP POST requests (default: `http://localhost`).
 `weblog.basicToken`
 
 A Basic authentication token to append to each HTTP request. It should be the user ID and password joined by a single colon, for example `USER:PASSWORD`.
+
+`weblog.includeCached`
+
+If `true`, send `process_cached` events when tasks are cached (default: `false`).
 
 ## Examples
 
