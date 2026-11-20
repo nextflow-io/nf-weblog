@@ -55,3 +55,5 @@ jobs:
           for event in started process_submitted process_started process_completed completed; do
             grep -q "\"event\":\"$event\"" echo.log || { echo "missing event: $event"; cat echo.log; exit 1; }
           done
+          nextflow run nf-weblog-test/ -plugins nf-weblog@$(cat VERSION) -resume
+          grep -q "\"event\":\"process_cached\"" echo.log || { echo "missing event: process_cached"; cat echo.log; exit 1; }

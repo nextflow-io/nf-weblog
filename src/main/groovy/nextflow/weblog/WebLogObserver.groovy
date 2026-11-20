@@ -83,15 +83,19 @@ class WebLogObserver implements TraceObserverV2 {
 
     private String basicToken
 
+    private boolean includeCached
+
     /**
      * Constructor that consumes a URL and creates
      * a basic HTTP client.
      * @param url
      * @param basicToken
+     * @param includeCached
      */
-    WebLogObserver(String url, String basicToken) {
+    WebLogObserver(String url, String basicToken, boolean includeCached = false) {
         this.endpoint = checkUrl(url)
         this.basicToken = checkBasicToken(basicToken)
+        this.includeCached = includeCached
         this.webLogAgent = new Agent<>(this)
         this.generator = createJsonGeneratorForPayloads()
     }
@@ -177,6 +181,18 @@ class WebLogObserver implements TraceObserverV2 {
     @Override
     void onTaskComplete(TaskEvent event) {
         asyncHttpMessage("process_completed", event.trace)
+    }
+
+    /**
+     * Send an HTTP message when a task has been cached
+     */
+    @Override
+    void onTaskCached(TaskEvent event) {
+        // event was triggered by a stored task, ignore it
+        if (!includeCached || !event.trace) {
+            return
+        }
+        asyncHttpMessage("process_cached", event.trace)
     }
 
     /**

@@ -47,6 +47,12 @@ class WebLogConfig implements ConfigScope {
     ''')
     final String basicToken
 
+    @ConfigOption
+    @Description('''
+        When `true`, send `process_cached` events when tasks are cached (default: `false`).
+    ''')
+    final boolean includeCached
+
     /* required by extension point -- do not remove */
     WebLogConfig() {}
 
@@ -54,5 +60,6 @@ class WebLogConfig implements ConfigScope {
         enabled = opts.enabled as boolean
         url = opts.url ?: WebLogObserver.DEF_URL
         basicToken = opts.basicToken
+        includeCached = opts.includeCached as boolean
     }
 }
